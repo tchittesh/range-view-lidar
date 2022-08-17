@@ -208,6 +208,12 @@ class DefaultFormatBundle3D(DefaultFormatBundle):
             assert isinstance(results['points'], BasePoints)
             results['points'] = DC(results['points'].tensor)
 
+        if 'lidar_img' in results:
+            lidar_img = np.ascontiguousarray(
+                results['lidar_img'].transpose(2, 0, 1)
+            )
+            results['lidar_img'] = DC(to_tensor(lidar_img), stack=True)
+
         for key in ['voxels', 'coors', 'voxel_centers', 'num_points']:
             if key not in results:
                 continue

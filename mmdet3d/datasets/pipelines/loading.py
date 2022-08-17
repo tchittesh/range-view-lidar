@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import os.path as osp
+
 import mmcv
 import numpy as np
 
@@ -68,6 +70,34 @@ class LoadMultiViewImageFromFiles(object):
         repr_str = self.__class__.__name__
         repr_str += f'(to_float32={self.to_float32}, '
         repr_str += f"color_type='{self.color_type}')"
+        return repr_str
+
+
+@PIPELINES.register_module()
+class LoadLidarImageFromFile:
+    """Loads a LIDAR image from file.
+
+    Required key is "lidar_img_filename".
+    """
+
+    def __call__(self, results):
+        """Call functions to load image and get image meta information.
+
+        Args:
+            results (dict): Result dict from :obj:`mmdet.CustomDataset`.
+
+        Returns:
+            dict: The dict contains loaded lidar image.
+        """
+        lidar_img = np.fromfile(
+            results['lidar_img_filename'],
+            dtype=np.float64,
+            count=-1).reshape((64, 512, 5))
+        results['lidar_img'] = lidar_img
+        return results
+
+    def __repr__(self):
+        repr_str = f'{self.__class__.__name__}()'
         return repr_str
 
 

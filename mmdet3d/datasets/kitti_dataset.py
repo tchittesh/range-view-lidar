@@ -115,6 +115,9 @@ class KittiDataset(Custom3DDataset):
         sample_idx = info['image']['image_idx']
         img_filename = os.path.join(self.data_root,
                                     info['image']['image_path'])
+        lidar_img_filename = os.path.join(self.root_split,
+                                          self.pts_prefix + '_image',
+                                          f'{sample_idx:06d}.bin')
 
         # TODO: consider use torch.Tensor only
         rect = info['calib']['R0_rect'].astype(np.float32)
@@ -128,6 +131,7 @@ class KittiDataset(Custom3DDataset):
             pts_filename=pts_filename,
             img_prefix=None,
             img_info=dict(filename=img_filename),
+            lidar_img_filename=lidar_img_filename,
             lidar2img=lidar2img)
 
         if not self.test_mode:
